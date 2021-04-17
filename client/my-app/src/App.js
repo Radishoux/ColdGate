@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from "./logo/icons.png"
 import menus from "./logo/menu.png"
 import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
