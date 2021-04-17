@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .App-logo {
@@ -35,4 +35,125 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.outer {
+  display:inline-block;
+  vertical-align:middle;
+  background-color:#1a2236;
+  color: white;
+  width: 100%;
+  position: fixed;
+}
+
+.divCentral {
+  float: left;
+}
+
+.one {
+  text-align: center;
+  width:6%; 
+  height:100vh;
+  border-right: 0.2vh solid #e6e6e6;
+  border-color: #293145;
+}
+.two {
+  /* width:25%;  */
+  /* height:100vh; */
+  border-right: 0.2vh solid #e6e6e6;
+  border-color: #293145;
+  transition-duration: 0.5s;
+}
+.three {
+  width:73%;
+  height: 100vh;
+
+  overflow-x: hidden; 
+  overflow-y: scroll;
+  
+  text-align: center;
+}
+
+.ulTop {
+  border-right: 0.2vh solid #e6e6e6;
+  border-color: #293145;
+  position: fixed;
+  background-color: #1a2236;
+  width: inherit;
+}
+
+.ulUser {
+  margin-bottom: 0;
+  list-style-type: none;
+  margin-top: 10vh;
+  width: 101%;
+  /* width: 50%; */
+  height: 100vh; /* percent relative to viewport height */
+  overflow-x: hidden; 
+  overflow-y: scroll;
+  max-width: -webkit-fill-available;
+}
+
+.liUser {
+  border-top: 0.2vh solid #e6e6e6;
+  border-bottom: 0.2vh solid #e6e6e6;
+  border-color: #293145;
+  width: 100%;
+  margin-left: -40px;
+  width: auto;
+  /* padding: 17px 30px; */
+}
+
+.liUser:hover {
+    background-color: #1f273b;
+}
+
+.pUser {
+    font-size: x-small;
+    margin-left: 3vh;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    margin-right: 1rem;
+}
+
+.userImg {
+  border-radius: 50%!important;
+  height: 2.3rem;
+  width: 2.3rem;
+}
+
+.userFigure {
+  float: left;
+  height: 2.3rem;
+  width: 2.3rem;
+  margin-left: 1rem;
+
+  margin-block-start: 1rem;
+  margin-block-end: 0em;
+  margin-inline-start: 1rem;
+  margin-inline-end: 1rem;
+}
+
+
+
+
+
+
+
+/* Scrollbar */
+::-webkit-scrollbar {
+ width: 9px;
+ height: 9px;
+}
+::-webkit-scrollbar-thumb {
+ background: linear-gradient(0deg, #82a1f0 14%,#435278 62%);
+ border-radius: 15px;
+}
+::-webkit-scrollbar-thumb:hover{
+ background: linear-gradient(13deg, #435278 14%,#82A1F0 64%);
+}
+::-webkit-scrollbar-track{
+ background: #1f273b;
+ border-radius: 9px;
 }
