@@ -18,7 +18,7 @@ function App() {
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [buttonVis, setbuttonVis] = useState("none");
     const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
-    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }, { user: 0, message: "NIK TA MERdddddddddddddddddddddddddddddddddddddddddddddddddd" }])
+    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }, { user: 0, message: "yup" }])
 
     function changeSide() {
         if (side) {
