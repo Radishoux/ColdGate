@@ -18,7 +18,7 @@ function App() {
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [buttonVis, setbuttonVis] = useState("none");
     const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
-    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }])
+    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }, { user: 0, message: "NIK TA MERdddddddddddddddddddddddddddddddddddddddddddddddddd" }])
 
     function changeSide() {
         if (side) {
@@ -34,8 +34,13 @@ function App() {
         }
     }
 
-    function tests() {
+    function addConv() {
         setConv(state => [...state, "Oui"]);
+    }
+    function addMess(e) {
+        if (e.key === 'Enter') {
+            setMessage(state => [...state, { user: 0, message: e.target.value }]);
+        }
     }
 
     function Convs(conv) {
@@ -60,7 +65,7 @@ function App() {
         return mess.map((elem, index) => {
             if (elem.user == 1) {
                 return (
-                    <div className="msgRdiv">
+                    <div className="msgRdiv" key={index}>
 
                         <p className="msgReceiv">{elem.message}</p>
 
@@ -68,7 +73,7 @@ function App() {
                 )
             } else {
                 return (
-                    <div className="msgSdiv">
+                    <div className="msgSdiv" key={index}>
 
                         <p className="msgSend">{elem.message}</p>
 
@@ -111,8 +116,15 @@ function App() {
                         <div style={{ height: "200vh" }}>
                             {messages(AllMess)}
                         </div>
+
                     </Col>
                 </Row>
+                <div className="footerMess">
+                    <div className="form__group field">
+                        <input autoComplete="off" onKeyDown={addMess} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
+                        <label htmlFor="name" className="form__label">Message</label>
+                    </div>
+                </div>
 
             </div>
         </div >
