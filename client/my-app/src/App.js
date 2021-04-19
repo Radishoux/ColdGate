@@ -1,54 +1,53 @@
 import React, { useState } from 'react';
+import { Row, Col } from 'antd';
+import 'antd/dist/antd.css';
+import { Typography } from 'antd';
+
 import menus from "./logo/menu.png"
 import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
+
 import './App.css';
 
-function Convs() {
-
-}
-
+const { Title } = Typography;
 
 
 function App() {
     const [side, setSide] = useState(true);
     const [sideContent, setSideContent] = useState("20%");
-    const [sideVisibiliy, setSideVisibiliy] = useState("block");
+    const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [buttonVis, setbuttonVis] = useState("none");
-    const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11"]);
-
+    const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
+    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }])
 
     function changeSide() {
-        console.log("e")
         if (side) {
-            setSideVisibiliy("none")
+            setSideVisibiliy(0)
             setSideContent("0%")
             setSide(false)
             setbuttonVis("block")
         } else {
             setSide(true)
-            setSideVisibiliy("block")
+            setSideVisibiliy(6)
             setSideContent("20%")
             setbuttonVis("none")
         }
     }
 
     function tests() {
-        var tmp = conversations;
-        tmp.push("Oui");
-        setConv(tmp)
-        console.log(conversations)
+        setConv(state => [...state, "Oui"]);
     }
 
-    function Convs() {
-        return conversations.map((elem, index) => {
+    function Convs(conv) {
+        return conv.map((elem, index) => {
             return (
                 <li className="liUser" key={index}>
                     <figure className="userFigure">
                         <img className="userImg" src={user}></img>
                     </figure>
                     <div>
-                        <h5>{elem}</h5>
+                        <Title style={{ color: "white" }} level={5}>{elem}</Title>
+                        <h5></h5>
 
                         <p className="pUser" style={{ maxWidth: "100%" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
@@ -57,38 +56,64 @@ function App() {
         })
     }
 
+    function messages(mess) {
+        return mess.map((elem, index) => {
+            if (elem.user == 1) {
+                return (
+                    <div className="msgRdiv">
+
+                        <p className="msgReceiv">{elem.message}</p>
+
+                    </div>
+                )
+            } else {
+                return (
+                    <div className="msgSdiv">
+
+                        <p className="msgSend">{elem.message}</p>
+
+                    </div>
+                )
+            }
+        })
+    }
+
     return (
         <div className="App">
 
-            <script src="https://kit.fontawesome.com/6897908ab9.js" crossOrigin="anonymous"></script>
-
             <div className="outer divCentral">
-                <div className="one divCentral" onClick={tests}>
+
+                <Row>
+                    <Col xs={2} className="one">
+                        {/* <button onClick={() => tests()}></button> */}
+                        <img src={menus} onClick={changeSide} style={{ width: "3vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis }}></img>
+
+                    </Col>
+
+                    <Col style={{ position: "relative" }} xs={sideVisibiliy} className="two">
+
+                        <div className="ulTop">
+                            <Title style={{ marginTop: "1vh", float: "left", marginLeft: "5vh", color: "white" }} level={3}>Chats</Title>
+                            <h3 ></h3>
+
+                            <img src={arrow} onClick={changeSide} style={{ float: "right", width: "3vh", marginTop: "1vh" }}></img>
+                        </div>
 
 
-                </div>
+                        <ul className="ulUser">
+                            {Convs(conversations)}
+                        </ul>
 
-                <div style={{ width: sideContent, display: sideVisibiliy }} className="two divCentral">
-                    <div className="ulTop">
-                        <h3 style={{ marginTop: "1vh", float: "left", marginLeft: "5vh", }}>Chats</h3>
+                    </Col>
 
-                        <img src={arrow} onClick={changeSide} style={{ float: "right", width: "3vh", marginTop: "1vh" }}></img>
-                    </div>
+                    <Col flex={5} className="three">
 
-                    <ul className="ulUser">
-                        {Convs()}
-                    </ul>
+                        <div style={{ height: "200vh" }}>
+                            {messages(AllMess)}
+                        </div>
+                    </Col>
+                </Row>
 
-                </div>
-                <div className="three divCentral">
-
-                    <img src={menus} onClick={changeSide} style={{ width: "3vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis }}></img>
-
-                    test
-
-                    <div style={{ height: "200vh" }}></div>
-
-                </div>
             </div>
         </div >
     );

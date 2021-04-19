@@ -52,56 +52,62 @@
 
 .one {
   text-align: center;
-  width:6%; 
+  /* width:6%;  */
   height:100vh;
-  border-right: 0.2vh solid #e6e6e6;
+  border-right: 0.1rem solid #e6e6e6;
   border-color: #293145;
 }
 .two {
   /* width:25%;  */
   /* height:100vh; */
-  border-right: 0.2vh solid #e6e6e6;
+  border-right: 0.1rem solid #e6e6e6;
   border-color: #293145;
   transition-duration: 0.5s;
 }
 .three {
-  width:73%;
+  /* width:73%; */
   height: 100vh;
 
   overflow-x: hidden; 
-  overflow-y: scroll;
+  overflow-y: hidden;
   
   text-align: center;
 }
 
+.three:hover {
+  transition-duration: 0.5s;
+  overflow-y: scroll;
+}
+
 .ulTop {
-  border-right: 0.2vh solid #e6e6e6;
-  border-color: #293145;
-  position: fixed;
+  position: absolute;
   background-color: #1a2236;
-  width: inherit;
+  width: 100%;
 }
 
 .ulUser {
   margin-bottom: 0;
   list-style-type: none;
-  margin-top: 10vh;
-  width: 101%;
-  /* width: 50%; */
+  padding-top: 8vh;
+  /* width: 101%; */
   height: 100vh; /* percent relative to viewport height */
   overflow-x: hidden; 
-  overflow-y: scroll;
+  overflow-y: hidden;
   max-width: -webkit-fill-available;
+}
+
+.ulUser:hover {
+  transition-duration: 0.5s;
+  overflow-y: scroll;
 }
 
 .liUser {
   border-top: 0.2vh solid #e6e6e6;
   border-bottom: 0.2vh solid #e6e6e6;
   border-color: #293145;
-  width: 100%;
   margin-left: -40px;
   width: auto;
-  /* padding: 17px 30px; */
+  min-height: 8vh;
 }
 
 .liUser:hover {
@@ -135,6 +141,41 @@
   margin-inline-end: 1rem;
 }
 
+.msgSend {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 5px;
+    color: #F9FBFF;
+    font-size: 1em;
+    padding: 10px 10px 10px 12px;
+    border-radius: 20px;
+    background: #79C7C5;
+    float: right;
+}
+
+.msgSdiv {
+  margin-right: 1rem;
+  height: 42px;
+  margin-bottom: 0.5rem;
+}
+
+.msgRdiv {
+  margin-left: 1rem;
+  height: 42px;
+  margin-bottom: 0.5rem;
+}
+
+.msgReceiv {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 5px;
+    color: #F9FBFF;
+    font-size: 1em;
+    padding: 10px 10px 10px 12px;
+    border-radius: 20px;
+    background: #bababa;
+    float: left;
+}
 
 
 
