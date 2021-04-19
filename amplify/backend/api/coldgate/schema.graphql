@@ -1,0 +1,7 @@
+type Message @model {
+  id: ID!
+  from: ID!
+  to: ID!
+  when: Int!
+  body: String!
+}
