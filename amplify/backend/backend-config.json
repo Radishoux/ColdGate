@@ -16,5 +16,13 @@
         }
       }
     }
+  },
+  "auth": {
+    "coldgate46fc5634": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
   }
 }

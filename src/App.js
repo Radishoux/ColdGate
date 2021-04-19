@@ -9,6 +9,8 @@ import user from "./logo/user.png"
 
 import './App.css';
 
+import { withAuthenticator } from '@aws-amplify/ui-react'
+
 const { Title } = Typography;
 
 
@@ -131,4 +133,4 @@ function App() {
     );
 }
 
-export default App;
+export default withAuthenticator(App)

@@ -10,6 +10,11 @@
       "StackName": "amplify-coldgate-main-205343",
       "StackId": "arn:aws:cloudformation:eu-west-2:507632167721:stack/amplify-coldgate-main-205343/53d4ccd0-a151-11eb-9ce0-0ae41cec514c",
       "AmplifyAppId": "d3m98187p9q4em"
+    },
+    "categories": {
+      "auth": {
+        "coldgate46fc5634": {}
+      }
     }
   },
   "dev": {
