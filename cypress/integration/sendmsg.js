@@ -3,8 +3,6 @@ import env from '../fixtures/env.json'
 describe('login', () => {
     it('login', () => {
         cy.visit(env.prodlink)
-        cy.get('#username').type(env.SIusername)
-        cy.get('#password').type(env.SIpassword)
-        cy.contains('SIGN IN')
+        cy.get('#msg', { timeout: 100000 }).type(env.test_text1).type('{enter}')
     })
 })
