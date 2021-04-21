@@ -104,7 +104,7 @@
   .ulUser {
     margin-bottom: 0;
     list-style-type: none;
-    padding-top: 8vh;
+    padding-top: 6vh;
     /* width: 101%; */
     height: 100vh; /* percent relative to viewport height */
     overflow-x: hidden; 
@@ -209,6 +209,7 @@
   /* Input */
   .form__group {
        position: relative;
+       float: left;
        padding: 15px 0 0;
        margin-top: 10px;
        width: 50%;
