@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import { Typography } from 'antd';
-
 import menus from "./logo/menu.png"
 import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
 import send from "./logo/send.png"
+import Socket from 'socket.io-client';
+
 
 import './App.css';
 
@@ -14,6 +15,8 @@ import { withAuthenticator } from '@aws-amplify/ui-react'
 
 const { Title } = Typography;
 
+var socket = Socket('http://localhost:3001');
+socket.emit('chat message', "je suis co");
 
 function App() {
     const [side, setSide] = useState(true);
@@ -144,4 +147,5 @@ function App() {
     );
 }
 
-export default withAuthenticator(App)
+// export default withAuthenticator(App)
+export default App

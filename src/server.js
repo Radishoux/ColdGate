@@ -1,16 +1,21 @@
 const express = require('express');
-const app = express();
 const http = require('http');
+const port = process.env.PORT || 3001;
+const app = express();
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+const io = require('socket.io')(server, {
+    cors: {
+        origin: '*',
+    }
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+app.use(require('cors'))
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/../build/index.html');
+});
+
+server.listen(port, () => {
+    console.log('listening on *' + port);
 });
 
 io.on('connection', (socket) => {
