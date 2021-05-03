@@ -42,8 +42,3 @@ io.on('connection', (socket) => {
 });
 
 io.emit('some event', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
-
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
-});

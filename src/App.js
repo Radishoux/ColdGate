@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useState } from 'react';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
@@ -7,16 +8,22 @@ import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
 import send from "./logo/send.png"
 import Socket from 'socket.io-client';
-
-
-import './App.css';
-
-import { withAuthenticator } from '@aws-amplify/ui-react'
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+Amplify.configure(awsconfig);
 
 const { Title } = Typography;
 
 var socket = Socket('http://localhost:3001');
 socket.emit('chat message', "je suis co");
+
+
+function whoami() {
+    Auth.currentAuthenticatedUser().then(function (u){
+        console.log(u);
+    })
+}
 
 function App() {
     const [side, setSide] = useState(true);
@@ -46,14 +53,14 @@ function App() {
     }
     function addMess(e) {
         if (e.key === 'Enter') {
-            if (e.target.value != "") {
+            if (e.target.value !== "") {
                 setMessage(state => [...state, { user: 0, message: e.target.value }]);
                 setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
             }
         }
     }
     function addMessbtn() {
-        if (document.getElementById("msg").value != "") {
+        if (document.getElementById("msg").value !== "") {
             setMessage(state => [...state, { user: 0, message: document.getElementById("msg").value }]);
             setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
         }
@@ -78,7 +85,7 @@ function App() {
 
     function messages(mess) {
         return mess.map((elem, index) => {
-            if (elem.user == 1) {
+            if (elem.user === 1) {
                 return (
                     <div className="msgRdiv" key={index}>
 
@@ -102,7 +109,7 @@ function App() {
         <div className="App">
 
             <div className="outer divCentral">
-
+            <AmplifySignOut />
                 <Row>
                     <Col xs={2} className="one">
                         {/* <button onClick={() => tests()}></button> */}
@@ -147,5 +154,7 @@ function App() {
     );
 }
 
-// export default withAuthenticator(App)
-export default App
+whoami();
+
+export default withAuthenticator(App)
+// export default App
