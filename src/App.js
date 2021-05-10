@@ -1,12 +1,18 @@
 import './App.css';
 import React, { useState } from 'react';
+import { Modal, Button } from 'antd';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import { Typography } from 'antd';
+import axios from 'axios';
+
 import menus from "./logo/menu.png"
 import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
+import userPro from "./logo/user2.png"
+import settings from "./logo/settings.png"
 import send from "./logo/send.png"
+
 import Socket from 'socket.io-client';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
@@ -20,7 +26,7 @@ socket.emit('chat message', "je suis co");
 
 
 function whoami() {
-    Auth.currentAuthenticatedUser().then(function (u){
+    Auth.currentAuthenticatedUser().then(function (u) {
         console.log(u);
     })
 }
@@ -30,6 +36,8 @@ function App() {
     const [sideContent, setSideContent] = useState("20%");
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [buttonVis, setbuttonVis] = useState("none");
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
     // const [conversations, setConv] = useState(["user1", "user2", "user3"]);
     const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }, { user: 0, message: "yup" }])
@@ -105,15 +113,65 @@ function App() {
         })
     }
 
+    // Fonction modal User Profile
+    function showModal() {
+        setIsModalVisible(true);
+    };
+
+    function handleOk() {
+        setIsModalVisible(false);
+    };
+
+    function handleCancel() {
+        setIsModalVisible(false);
+    };
+
+
+    // Fonction modal settings
+    function showSettings() {
+        setIsSettingsVisible(true);
+    };
+
+    function handleOkSettings() {
+        setIsSettingsVisible(false);
+    };
+
+    function handleCancelSettings() {
+        setIsSettingsVisible(false);
+    };
+
     return (
         <div className="App">
 
             <div className="outer divCentral">
-            <AmplifySignOut />
+                {/* <AmplifySignOut /> */}
+                <Modal
+                    title="User Profile"
+                    visible={isModalVisible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={null}
+                >
+                    <p style={{ float: "left", marginRight: "4vh" }}>Profil Pic:</p>
+                    <img className="userImg" style={{ marginBottom: "2vh" }} src={user}></img>
+                    <p>Username : test</p>
+                    <p>Some contents...</p>
+                </Modal>
+                <Modal
+                    title="Settings"
+                    visible={isSettingsVisible}
+                    onOk={handleOkSettings}
+                    onCancel={handleCancelSettings}
+                    footer={null}
+                >
+                    <p>Some contents...</p>
+                </Modal>
                 <Row>
-                    <Col xs={2} className="one">
+                    <Col xs={1} className="one">
                         {/* <button onClick={() => tests()}></button> */}
-                        <img src={menus} onClick={changeSide} style={{ width: "3vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis, cursor: "pointer" }}></img>
+                        <img src={menus} onClick={changeSide} style={{ width: "3.5vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis, cursor: "pointer" }}></img>
+                        <img src={userPro} onClick={showModal} style={{ width: "3.5vh", marginTop: "5vh", float: "left", marginLeft: "1.5vh", cursor: "pointer" }}></img>
+                        <img src={settings} onClick={showSettings} style={{ width: "3.5vh", marginTop: "5vh", float: "left", marginLeft: "1.5vh", cursor: "pointer" }}></img>
 
                     </Col>
 
@@ -134,7 +192,8 @@ function App() {
                     </Col>
 
                     <Col flex={5} className="three">
-
+                        <div style={{ height: "4vh" }}>
+                        </div>
                         <div style={{ height: "200vh" }}>
                             {messages(AllMess)}
                         </div>
