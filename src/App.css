@@ -118,6 +118,7 @@
   }
   
   .liUser {
+    cursor: pointer;
     border-top: 0.2vh solid #e6e6e6;
     border-bottom: 0.2vh solid #e6e6e6;
     border-color: #293145;
@@ -127,7 +128,7 @@
   }
   
   .liUser:hover {
-      background-color: #1f273b;
+      background-color: #28334e;
   }
   
   .pUser {

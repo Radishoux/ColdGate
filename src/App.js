@@ -32,6 +32,7 @@ function whoami() {
 }
 
 function App() {
+    const [indexConv, setindexConv] = useState(0);
     const [side, setSide] = useState(true);
     const [sideContent, setSideContent] = useState("20%");
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
@@ -77,7 +78,7 @@ function App() {
     function Convs(conv) {
         return conv.map((elem, index) => {
             return (
-                <li className="liUser" key={index}>
+                <li className="liUser" style={{ backgroundColor: indexConv === index ? "#28334e" : "#1a2236" }} onClick={() => setindexConv(index)} key={index}>
                     <figure className="userFigure">
                         <img className="userImg" src={user}></img>
                     </figure>
@@ -92,12 +93,13 @@ function App() {
     }
 
     function messages(mess) {
+        const tmp = indexConv;
         return mess.map((elem, index) => {
             if (elem.user === 1) {
                 return (
                     <div className="msgRdiv" key={index}>
 
-                        <p className="msgReceiv">{elem.message}</p>
+                        <p className="msgReceiv">{elem.message}{tmp}</p>
 
                     </div>
                 )
