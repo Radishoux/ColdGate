@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
@@ -22,26 +22,47 @@ Amplify.configure(awsconfig);
 const { Title } = Typography;
 
 var socket = Socket('http://localhost:3001');
-socket.emit('chat message', "je suis co");
+// socket.emit('chat message', "je suis co");
 
 
-function whoami() {
-    Auth.currentAuthenticatedUser().then(function (u) {
-        console.log(u);
-    })
-}
+// var socket = Socket('http://localhost:3001');
+
+Auth.currentAuthenticatedUser().then(function (u) {
+    console.log(u);
+    socket.emit('id socket', u);
+})
+
+
+
+// function getco() {
+//     socket.emit('id socket', u);
+// }
 
 function App() {
     const [indexConv, setindexConv] = useState(0);
     const [side, setSide] = useState(true);
+    const [talkinto, setTalkinto] = useState();
+    const [conversations, setConv] = useState([]);
     const [sideContent, setSideContent] = useState("20%");
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [buttonVis, setbuttonVis] = useState("none");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-    const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
+    // const [conversations, setConv] = useState(["user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9", "user10", "user11", "user12"]);
+    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there and welcome to Coldgate" }, { user: 1, message: "Please select a user to talk to" }, { user: 1, message: "←←←" }])
+
+
     // const [conversations, setConv] = useState(["user1", "user2", "user3"]);
-    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there" }, { user: 1, message: "How are you?" }, { user: 0, message: "Fine thx" }, { user: 0, message: "and you ?" }, { user: 0, message: "yup" }])
+
+    socket.on("whoco", colist => {
+        var tmpconvs = [];
+        for (var co in colist) tmpconvs.push(co);
+        setConv(tmpconvs);
+    })
+
+    socket.on("new msg", msg => {
+        console.log(`${msg.from}: ${msg.content}`)
+    })
 
     function changeSide() {
         if (side) {
@@ -57,35 +78,40 @@ function App() {
         }
     }
 
-    function addConv() {
-        setConv(state => [...state, "Oui"]);
-    }
-    function addMess(e) {
-        if (e.key === 'Enter') {
-            if (e.target.value !== "") {
-                setMessage(state => [...state, { user: 0, message: e.target.value }]);
-                setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
-            }
-        }
-    }
-    function addMessbtn() {
+    function addMess() {
         if (document.getElementById("msg").value !== "") {
             setMessage(state => [...state, { user: 0, message: document.getElementById("msg").value }]);
-            setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
+            socket.emit('chat message', { to: talkinto, content: document.getElementById("msg").value });
+            document.getElementById("msg").value = "";
         }
     }
+
+    // function addMess(e) {
+    //     if (e.key === 'Enter') {
+    //         if (e.target.value !== "") {
+    //             setMessage(state => [...state, { user: 0, message: e.target.value }]);
+    //             setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
+    //         }
+    //     }
+    // }
+    // function addMessbtn() {
+    //     if (document.getElementById("msg").value !== "") {
+    //         setMessage(state => [...state, { user: 0, message: document.getElementById("msg").value }]);
+    //         setTimeout(() => { document.getElementById("msg").value = ""; }, 100);
+    //     }
+    // }
 
     function Convs(conv) {
         return conv.map((elem, index) => {
             return (
-                <li className="liUser" style={{ backgroundColor: indexConv === index ? "#28334e" : "#1a2236" }} onClick={() => setindexConv(index)} key={index}>
+                <li className="liUser" style={{ backgroundColor: indexConv === index ? "#28334e" : "#1a2236" }} id={elem} onClick={() => setindexConv(index), setTalkinto(elem)} key={index}>
                     <figure className="userFigure">
                         <img className="userImg" src={user}></img>
                     </figure>
                     <div>
                         <Title style={{ color: "white", marginTop: "1rem", marginBottom: "0.7rem" }} level={5}>{elem}</Title>
 
-                        <p className="pUser" style={{ maxWidth: "100%" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum dolor Lorem consectetur.</p>
+                        <p className="pUser" style={{ maxWidth: "100%" }}></p>
                     </div>
                 </li>
             )
@@ -93,13 +119,12 @@ function App() {
     }
 
     function messages(mess) {
-        const tmp = indexConv;
         return mess.map((elem, index) => {
             if (elem.user === 1) {
                 return (
                     <div className="msgRdiv" key={index}>
 
-                        <p className="msgReceiv">{elem.message}{tmp}</p>
+                        <p className="msgReceiv">{elem.message}</p>
 
                     </div>
                 )
@@ -146,7 +171,7 @@ function App() {
         <div className="App">
 
             <div className="outer divCentral">
-                {/* <AmplifySignOut /> */}
+                <AmplifySignOut />
                 <Modal
                     title="User Profile"
                     visible={isModalVisible}
@@ -187,16 +212,14 @@ function App() {
                         </div>
 
 
-                        <ul className="ulUser">
+                        <ul id="ulUser" className="ulUser">
                             {Convs(conversations)}
                         </ul>
 
                     </Col>
 
                     <Col flex={5} className="three">
-                        <div style={{ height: "4vh" }}>
-                        </div>
-                        <div style={{ height: "200vh" }}>
+                        <div style={{ padding: "10px 0" }}>
                             {messages(AllMess)}
                         </div>
 
@@ -204,18 +227,15 @@ function App() {
                 </Row>
                 <div className="footerMess">
                     <div className="form__group field">
-                        <input type="reset" autoComplete="off" onKeyDown={addMess} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
+                        <input type="reset" autoComplete="off" onKeyDown={(e) => { if (e.key === 'Enter') addMess(); }} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
                         <label htmlFor="name" className="form__label">Message</label>
                     </div>
-                    <img src={send} onClick={addMessbtn} style={{ marginLeft: "1.5rem", width: "4vh", marginTop: "4vh", cursor: "pointer" }}></img>
+                    <img src={send} onClick={addMess} style={{ marginLeft: "1.5rem", width: "4vh", marginTop: "4vh", cursor: "pointer" }}></img>
                 </div>
 
             </div>
         </div >
     );
 }
-
-whoami();
-
 export default withAuthenticator(App)
 // export default App

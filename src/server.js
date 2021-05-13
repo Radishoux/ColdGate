@@ -9,6 +9,8 @@ const io = require('socket.io')(server, {
     }
 });
 
+var socketholder = {};
+
 app.use(require('cors'))
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/../build/index.html');
@@ -19,26 +21,28 @@ server.listen(port, () => {
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    socket.on('id socket', (u) => {
+        socket.onit = u.attributes.email;
+        socketholder[u.attributes.email] = socket.id;
+        io.emit('whoco', socketholder);
+        console.log(`${u.attributes.email} connected`);
+    });
+});
+
+io.on('connection', (socket) => {
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log(`${socket.onit} disconnected`);
+        delete socketholder[socket.onit]
+        io.emit('whoco', socketholder);
     });
 });
 
 io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
+        console.log(`${socket.onit} to ${msg.to}: ${msg.content}`);
+        if (socketholder[msg.to]) io.to(socketholder[msg.to]).emit('new msg', { from: socket.onit, content: msg.content });
+        // save db
     });
 });
 
-io.on('connection', (socket) => {
-    socket.broadcast.emit('hi');
-});
-
-io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
-    });
-});
-
-io.emit('some event', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+// io.emit('some event', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
