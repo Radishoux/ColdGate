@@ -3,6 +3,10 @@ const http = require('http');
 const port = process.env.PORT || 3001;
 const app = express();
 const server = http.createServer(app);
+var AWS = require('aws-sdk');
+AWS.config.update({ region: 'eu-west-2' });
+var ddb = new AWS.DynamoDB();
+
 const io = require('socket.io')(server, {
     cors: {
         origin: '*',
@@ -12,12 +16,9 @@ const io = require('socket.io')(server, {
 var socketholder = {};
 
 app.use(require('cors'))
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/../build/index.html');
-});
 
 server.listen(port, () => {
-    console.log('listening on *' + port);
+    console.log('socket listening on *' + port);
 });
 
 io.on('connection', (socket) => {
@@ -40,9 +41,17 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         console.log(`${socket.onit} to ${msg.to}: ${msg.content}`);
+        ddb.putItem({
+            TableName: 'Coldgate',
+            Item: { 'from:to': { S: `${socket.onit}€${msg.to}` }, 'when': { N: Date.now().toString() }, 'body': { S: msg.content } }
+        }, function(err, data) { if (err) console.log("Error", err); });
         if (socketholder[msg.to]) io.to(socketholder[msg.to]).emit('new msg', { from: socket.onit, content: msg.content });
-        // save db
     });
 });
 
-// io.emit('some event', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+io.on('connection', (socket) => {
+    socket.on('histo', (msg) => {
+        console.log(`${socket.onit} wants histo with ${msg.with} from ${msg.from} to ${msg.to}`);
+        // db get
+    });
+});

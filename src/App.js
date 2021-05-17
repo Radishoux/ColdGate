@@ -10,28 +10,26 @@ import send from "./logo/send.png"
 import Socket from 'socket.io-client';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
+import axios from "axios"
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 Amplify.configure(awsconfig);
 
 const { Title } = Typography;
 
 var socket = Socket('http://localhost:3001');
+var me;
 
 Auth.currentAuthenticatedUser().then(function (u) {
     console.log(u);
+    console.log(u.attributes.email);
+    me = u;
     socket.emit('id socket', u);
+    socket.emit('histo', {with: me.attributes.email, from: 0, to: 10});
 })
-
-
-
-// function getco() {
-//     socket.emit('id socket', u);
-// }
-
 
 function App() {
     const [side, setSide] = useState(true);
-    const [talkinto, setTalkinto] = useState()
+    const [talkinto, setTalkinto] = useState(me.attributes.email)
     const [conversations, setConv] = useState([]);
     const [buttonVis, setbuttonVis] = useState("none");
     const [sideContent, setSideContent] = useState("20%");
