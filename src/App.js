@@ -10,7 +10,6 @@ import send from "./logo/send.png"
 import Socket from 'socket.io-client';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
-import axios from "axios"
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 Amplify.configure(awsconfig);
 
@@ -24,27 +23,58 @@ Auth.currentAuthenticatedUser().then(function (u) {
     console.log(u.attributes.email);
     me = u;
     socket.emit('id socket', u);
-    socket.emit('histo', {with: me.attributes.email, from: 0, to: 10});
+    socket.emit('histo', { with: me.attributes.email, from: 0, to: 10 });
 })
+
 
 function App() {
     const [side, setSide] = useState(true);
-    const [talkinto, setTalkinto] = useState(me.attributes.email)
+    const [talkinto, setTalkinto] = useState()
     const [conversations, setConv] = useState([]);
     const [buttonVis, setbuttonVis] = useState("none");
     const [sideContent, setSideContent] = useState("20%");
     const [sideVisibiliy, setSideVisibiliy] = useState(6);
-    const [AllMess, setMessage] = useState([{ user: 1, message: "Hello there and welcome to Coldgate" }, { user: 1, message: "Please select a user to talk to" }, { user: 1, message: "←←←" }])
+    const [AllMess, setMessage] = useState([]);
+    const [cheat, setcheat] = useState([]);
 
-    socket.on("whoco", colist => {
-        var tmpconvs = [];
-        for (var co in colist) tmpconvs.push(co);
-        setConv(tmpconvs);
-    })
+    useEffect(() => {
+        socket.on("whoco", colist => {
+            var tmpconvs = [];
+            for (var co in colist) tmpconvs.push(co);
+            setConv(tmpconvs);
+        })
 
-    socket.on("new msg", msg => {
-        console.log(`${msg.from}: ${msg.content}`)
-    })
+        socket.on("new msg", msg => {
+            alert(`${msg.from}: ${msg.content}`);
+            setTalkinto();
+            setTalkinto(msg.from);
+        })
+
+        socket.on("histoto", histomsgs => {
+            console.log(histomsgs)
+            setMessage(Allmess => [...Allmess, ...histomsgs.msgs.map((m) => {
+                return { user: 1, message: m.body.S, when: m.when.N }
+            })])
+        })
+
+        socket.on("histofrom", histomsgs => {
+            console.log(histomsgs)
+            setMessage(Allmess => [...Allmess, ...histomsgs.msgs.map((m) => {
+                return { user: 0, message: m.body.S, when: m.when.N }
+            })])
+        })
+
+        setTalkinto(me.attributes.email);
+    }, [cheat])
+
+    useEffect(() => {
+        setMessage([]);
+        socket.emit('histo', { with: talkinto, from: 0, to: 10 });
+        document.title = talkinto;
+
+        console.log(talkinto)
+    }, [talkinto])
+
 
     function changeSide() {
         if (side) {
@@ -63,15 +93,15 @@ function App() {
     function addMess() {
         if (document.getElementById("msg").value !== "") {
             setMessage(state => [...state, { user: 0, message: document.getElementById("msg").value }]);
-            socket.emit('chat message', { to:talkinto, content: document.getElementById("msg").value });
-            document.getElementById("msg").value = "";
+            socket.emit('chat message', { to: talkinto, content: document.getElementById("msg").value });
+            setTimeout(function () { document.getElementById("msg").value = "" }, 100);
         }
     }
 
     function Convs(conv) {
         return conv.map((elem, index) => {
             return (
-                <li className="liUser" onClick={() => {setTalkinto(elem)}} id={elem} key={index}>
+                <li className="liUser" onClick={() => { setTalkinto(elem) }} id={elem} key={index}>
                     <figure className="userFigure">
                         <img className="userImg" src={user}></img>
                     </figure>
@@ -145,7 +175,7 @@ function App() {
                 </Row>
                 <div className="footerMess">
                     <div className="form__group field">
-                        <input type="reset" autoComplete="off" onKeyDown={(e) => {if(e.key === 'Enter')addMess();}} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
+                        <input type="reset" autoComplete="off" onKeyDown={(e) => { if (e.key === 'Enter') addMess(); }} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
                         <label htmlFor="name" className="form__label">Message</label>
                     </div>
                     <img src={send} onClick={addMess} style={{ marginLeft: "1.5rem", width: "4vh", marginTop: "4vh", cursor: "pointer" }}></img>

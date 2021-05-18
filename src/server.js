@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         console.log(`${socket.onit} to ${msg.to}: ${msg.content}`);
         ddb.putItem({
             TableName: 'Coldgate',
-            Item: { 'from:to': { S: `${socket.onit}€${msg.to}` }, 'when': { N: Date.now().toString() }, 'body': { S: msg.content } }
+            Item: { 'fromto': { S: `${socket.onit}€${msg.to}` }, 'when': { N: Date.now().toString() }, 'body': { S: msg.content } }
         }, function(err, data) { if (err) console.log("Error", err); });
         if (socketholder[msg.to]) io.to(socketholder[msg.to]).emit('new msg', { from: socket.onit, content: msg.content });
     });
@@ -53,5 +53,43 @@ io.on('connection', (socket) => {
     socket.on('histo', (msg) => {
         console.log(`${socket.onit} wants histo with ${msg.with} from ${msg.from} to ${msg.to}`);
         // db get
+
+        var pft = {
+            ExpressionAttributeValues: { ':ft': { S: `${socket.onit}€${msg.with}` } },
+            KeyConditionExpression: "fromto = :ft",
+            TableName: 'Coldgate'
+        };
+
+        ddb.query(pft, function(err, data) {
+            if (err) {
+                console.log("Error", err);
+            } else {
+                console.log("il a recu " + `${socket.onit}€${msg.with}`)
+                socket.emit('histofrom', { msgs: data.Items })
+
+                data.Items.forEach(function(element, index, array) {
+                    console.log(element.body.S + " (" + element.when.N + ")");
+                });
+            }
+        });
+
+        var ptf = {
+            ExpressionAttributeValues: { ':ft': { S: `${msg.with}€${socket.onit}` } },
+            KeyConditionExpression: "fromto = :ft",
+            TableName: 'Coldgate'
+        };
+
+        ddb.query(ptf, function(err, data) {
+            if (err) {
+                console.log("Error", err);
+            } else {
+                console.log("il a envoyé " + `${msg.with}€${socket.onit}`);
+                socket.emit('histoto', { msgs: data.Items })
+                data.Items.forEach(function(element, index, array) {
+                    console.log(element.body.S + " (" + element.when.N + ")");
+                });
+            }
+        });
+
     });
 });
