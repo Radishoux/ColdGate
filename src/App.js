@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import { Typography } from 'antd';
-import menus from "./logo/menu.png"
-import arrow from "./logo/left-arrow.png"
 import user from "./logo/user.png"
 import send from "./logo/send.png"
 import Socket from 'socket.io-client';
@@ -19,22 +17,21 @@ var socket = Socket('http://localhost:3001');
 var me;
 
 Auth.currentAuthenticatedUser().then(function (u) {
-    console.log(u);
-    console.log(u.attributes.email);
     me = u;
     socket.emit('id socket', u);
     socket.emit('histo', { with: me.attributes.email, from: 0, to: 10 });
 })
 
 function App() {
-    const [side, setSide] = useState(true);
+    // const [side, setSide] = useState(true);
     const [talkinto, setTalkinto] = useState()
     const [conversations, setConv] = useState([]);
-    const [buttonVis, setbuttonVis] = useState("none");
-    const [sideContent, setSideContent] = useState("20%");
-    const [sideVisibiliy, setSideVisibiliy] = useState(6);
+    // const [buttonVis, setbuttonVis] = useState("none");
+    // const [sideContent, setSideContent] = useState("20%");
+    // const [sideVisibiliy, setSideVisibiliy] = useState(6);
     const [AllMess, setMessage] = useState([]);
-    const [cheat, setcheat] = useState([]);
+    const [cheat] = useState([]);
+    const [charnum, setCharnum] = useState(0)
 
     useEffect(() => {
         socket.on("whoco", colist => {
@@ -50,14 +47,12 @@ function App() {
         })
 
         socket.on("histoto", histomsgs => {
-            console.log(histomsgs)
             setMessage(Allmess => [...Allmess, ...histomsgs.msgs.map((m) => {
                 return { user: 1, message: m.body.S, when: m.when.N }
             })])
         })
 
         socket.on("histofrom", histomsgs => {
-            console.log(histomsgs)
             setMessage(Allmess => [...Allmess, ...histomsgs.msgs.map((m) => {
                 return { user: 0, message: m.body.S, when: m.when.N }
             })])
@@ -70,30 +65,29 @@ function App() {
         setMessage([]);
         socket.emit('histo', { with: talkinto, from: 0, to: 10 });
         document.title = talkinto;
-
-        console.log(talkinto)
     }, [talkinto])
 
 
-    function changeSide() {
-        if (side) {
-            setSideVisibiliy(0)
-            setSideContent("0%")
-            setSide(false)
-            setbuttonVis("block")
-        } else {
-            setSide(true)
-            setSideVisibiliy(6)
-            setSideContent("20%")
-            setbuttonVis("none")
-        }
-    }
+    // function changeSide() {
+    //     if (side) {
+    //         setSideVisibiliy(0)
+    //         setSideContent("0%")
+    //         setSide(false)
+    //         setbuttonVis("block")
+    //     } else {
+    //         setSide(true)
+    //         setSideVisibiliy(6)
+    //         setSideContent("20%")
+    //         setbuttonVis("none")
+    //     }
+    // }
 
     function addMess() {
         if (document.getElementById("msg").value !== "") {
             setMessage(state => [...state, { user: 0, message: document.getElementById("msg").value }]);
             socket.emit('chat message', { to: talkinto, content: document.getElementById("msg").value });
             setTimeout(function () { document.getElementById("msg").value = "" }, 100);
+            setCharnum(0);
         }
     }
 
@@ -102,7 +96,7 @@ function App() {
             return (
                 <li className="liUser" onClick={() => { setTalkinto(elem) }} id={elem} key={index}>
                     <figure className="userFigure">
-                        <img className="userImg" src={user}></img>
+                        <img className="userImg" alt="" src={user}></img>
                     </figure>
                     <div>
                         <Title style={{ color: "white", marginTop: "1rem", marginBottom: "0.7rem" }} level={5}>{elem}</Title>
@@ -144,17 +138,17 @@ function App() {
                 <Row>
                     <Col xs={2} className="one">
                         {/* <button onClick={() => tests()}></button> */}
-                        <img src={menus} onClick={changeSide} style={{ width: "3vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis, cursor: "pointer" }}></img>
+                        {/* <img src={menus} onClick={changeSide} style={{ width: "3vh", marginTop: "1vh", float: "left", marginLeft: "1.5vh", display: buttonVis, cursor: "pointer" }}></img> */}
 
                     </Col>
 
-                    <Col style={{ position: "relative" }} xs={sideVisibiliy} className="two">
+                    <Col style={{ position: "relative" }}  className="two">
 
                         <div className="ulTop">
                             <Title style={{ marginTop: "1vh", float: "left", marginLeft: "5vh", color: "white" }} level={3}>Chats</Title>
-                            <h3 ></h3>
+                            <h3 > </h3>
 
-                            <img src={arrow} onClick={changeSide} style={{ float: "right", width: "3vh", marginTop: "1vh", cursor: "pointer" }}></img>
+                            {/* <img src={arrow} onClick={changeSide} style={{ float: "right", width: "3vh", marginTop: "1vh", cursor: "pointer" }}></img> */}
                         </div>
 
 
@@ -174,10 +168,10 @@ function App() {
                 </Row>
                 <div className="footerMess">
                     <div className="form__group field">
-                        <input type="reset" autoComplete="off" onKeyDown={(e) => { if (e.key === 'Enter') addMess(); }} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
-                        <label htmlFor="name" className="form__label">Message</label>
+                        <input maxlength="49" autoComplete="off" onKeyDown={(e) => { setCharnum(document.getElementById("msg").value.length+1); if (e.key === 'Enter') addMess(); }} type="input" className="form__field" placeholder="Msg" name="msg" id='msg' required />
+                        <label htmlFor="name" className="form__label">Message {charnum}/50</label>
                     </div>
-                    <img src={send} onClick={addMess} style={{ marginLeft: "1.5rem", width: "4vh", marginTop: "4vh", cursor: "pointer" }}></img>
+                    <img alt="" src={send} onClick={addMess} style={{ marginLeft: "1.5rem", width: "4vh", marginTop: "4vh", cursor: "pointer" }}></img>
                 </div>
 
             </div>

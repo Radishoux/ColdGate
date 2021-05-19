@@ -55,6 +55,7 @@ code {
     color: white;
     width: 100%;
     position: fixed;
+    height: 100vh;
 }
 
 .divCentral {
@@ -79,7 +80,7 @@ code {
 
 .three {
     /* width:73%; */
-    height: 90vh;
+    height: 70vh;
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;
@@ -159,6 +160,8 @@ code {
     position: relative;
     display: inline-block;
     margin-bottom: 5px;
+    max-width: 50vw;
+    height: auto;
     color: #F9FBFF;
     font-size: 1em;
     padding: 10px 10px 10px 12px;
@@ -187,6 +190,7 @@ code {
     margin-bottom: 5px;
     color: #F9FBFF;
     font-size: 1em;
+    max-width: 50vw;
     padding: 10px 10px 10px 12px;
     border-radius: 20px;
     background: rgb(186, 186, 186, 0.5);
