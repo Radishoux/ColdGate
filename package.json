@@ -44,7 +44,6 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^7.1.0",
     "electron-nightly": "^14.0.0-nightly.20210427"
   }
 }
