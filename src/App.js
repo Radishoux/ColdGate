@@ -26,7 +26,6 @@ Auth.currentAuthenticatedUser().then(function (u) {
     socket.emit('histo', { with: me.attributes.email, from: 0, to: 10 });
 })
 
-
 function App() {
     const [side, setSide] = useState(true);
     const [talkinto, setTalkinto] = useState()

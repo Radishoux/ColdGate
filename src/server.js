@@ -1,8 +1,12 @@
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const port = process.env.PORT || 3001;
-const app = express();
-const server = http.createServer(app);
+const bapp = express();
+const fapp = express();
+
+
+const server = http.createServer(bapp);
 var AWS = require('aws-sdk');
 AWS.config.update({ region: 'eu-west-2' });
 var ddb = new AWS.DynamoDB();
@@ -15,7 +19,7 @@ const io = require('socket.io')(server, {
 
 var socketholder = {};
 
-app.use(require('cors'))
+bapp.use(require('cors'))
 
 server.listen(port, () => {
     console.log('socket listening on *' + port);
@@ -93,3 +97,12 @@ io.on('connection', (socket) => {
 
     });
 });
+
+fapp.use(express.static(path.join(__dirname, '../build')));
+
+
+fapp.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
+
+fapp.listen(8080);
