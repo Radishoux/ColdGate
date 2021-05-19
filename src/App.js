@@ -13,7 +13,8 @@ Amplify.configure(awsconfig);
 
 const { Title } = Typography;
 
-var socket = Socket('http://localhost:3001');
+// var socket = Socket('http://localhost:3001');
+var socket = Socket('http://3.8.175.248:3001');
 var me;
 
 Auth.currentAuthenticatedUser().then(function (u) {
