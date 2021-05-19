@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const port = 3001;
-// const port = http://3.8.175.248:3001;
 const bapp = express();
 const fapp = express();
 
@@ -106,5 +105,4 @@ fapp.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
-// fapp.listen(8080);
 fapp.listen(8080);
