@@ -1,7 +1,8 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
-const port = process.env.PORT || 3001;
+// const port = process.env.PORT || 3001;
+const port = 'http://3.8.175.248:3001';
 const bapp = express();
 const fapp = express();
 
