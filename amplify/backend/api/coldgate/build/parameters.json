@@ -1,0 +1,8 @@
+{
+    "CreateAPIKey": 1,
+    "AppSyncApiName": "coldgate",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "S3DeploymentBucket": "amplify-coldgate-main-205343-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/b9e004a798b1f78a256177de5e2e73b6aa8f311c"
+}
